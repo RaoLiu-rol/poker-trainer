@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0b1f16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>德州扑克 · 六人桌</title>
+<script>
+/* 尽早应用主题，避免刷新时先闪一下深色 */
+(function () {
+  try {
+    var m = localStorage.getItem('poker.theme.v1');
+    var light = m ? (m === 'light')
+      : !!(window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
+    if (light) document.documentElement.classList.add('light');
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', light ? '#f4f1e8' : '#0b1f16');
+  } catch (e) {}
+})();
+</script>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="stylesheet" href="style.css?v=16">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="stat" id="handNo">第 0 手</div>
+    <button id="btnBlinds" class="blindBtn" title="设置盲注">盲注 <b>5/10</b></button>
+    <div class="spacer"></div>
+    <button id="btnLang" class="ghost" title="语言 / Language">🌐</button>
+    <button id="btnTheme" class="ghost" title="切换浅色/深色">浅色</button>
+    <button id="btnAchv" class="ghost" title="成就墙">🏅</button>
+    <button id="btnHistory" class="ghost">历史</button>
+    <button id="btnEquity" class="ghost">权益</button>
+    <button id="btnRebuy" class="ghost">＋1000</button>
+  </header>
+
+  <div id="table">
+    <div class="felt"></div>
+    <div id="board">
+      <div id="pot"></div>
+      <div id="community"></div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <div class="ctlRow">
+      <div id="ctlMsg">轮到你行动</div>
+      <div id="raiseVal">—</div>
+    </div>
+    <input type="range" id="slider" min="10" max="1000" step="5" value="60">
+    <div class="ctlRow quick">
+      <button class="quick" data-frac="2.5" data-mode="bb">2.5BB</button>
+      <button class="quick" data-frac="3" data-mode="bb">3BB</button>
+      <button class="quick" data-frac="4" data-mode="bb">4BB</button>
+      <button class="quick" data-frac="max" data-mode="max">全下</button>
+    </div>
+    <div class="ctlRow actions">
+      <button id="btnFold" class="actions danger">弃牌</button>
+      <button id="btnCall" class="actions primary">过牌</button>
+      <button id="btnRaise" class="actions primary">加注</button>
+    </div>
+  </div>
+
+  <div id="logPanel">
+    <div id="logTitle">📋 动作记录</div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<div id="overlay">
+  <div class="rbox">
+    <h2 id="ovTitle">德州扑克 · 六人桌</h2>
+    <div id="ovBody" class="ovBody"></div>
+    <div class="ovBtns" id="ovBtns"></div>
+  </div>
+</div>
+
+<script src="engine.js?v=16"></script>
+<script src="i18n.js?v=16"></script>
+<script src="locale/en.js?v=16"></script>
+<script src="locale/ja.js?v=16"></script>
+<script src="locale/ko.js?v=16"></script>
+<script src="locale/es.js?v=16"></script>
+<script src="locale/pt.js?v=16"></script>
+<script src="locale/de.js?v=16"></script>
+<script src="locale/fr.js?v=16"></script>
+<script src="app.js?v=16"></script>
+</body>
+</html>

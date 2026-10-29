@@ -1,0 +1,25 @@
+{
+  "name": "Poker Trainer — 6-Max NLHE",
+  "short_name": "Poker Trainer",
+  "description": "Offline No-Limit Hold'em trainer: equity-based opponents, hand review and 48 achievements.",
+  "id": "/pokersim/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#0b1f16",
+  "theme_color": "#0b1f16",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["games", "education", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    { "name": "New hand", "url": "./index.html?new=1" }
+  ]
+}

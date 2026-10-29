@@ -1,0 +1,42 @@
+name: Deploy PWA site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build static site
+        run: |
+          mkdir -p dist/locale dist/icons
+          cp poker/index.html poker/style.css poker/engine.js poker/app.js poker/i18n.js dist/
+          cp poker/manifest.webmanifest poker/sw.js poker/privacy.html dist/
+          cp poker/locale/*.js dist/locale/
+          cp poker/icons/*.png dist/icons/
+          printf '<!doctype html><meta charset="utf-8"><script>location.replace("./index.html")</script>' > dist/404.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
