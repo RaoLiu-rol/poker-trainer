@@ -1021,8 +1021,11 @@
     } catch (e) {
       console.warn('[achv] 成就统计失败，不影响结算', e);
     }
+    // 成就提示压缩成一行（电视上一屏放得下，细节在成就墙看）
     const achvHTML = newly.length
-      ? '<div class="achvList">' + newly.map((d) => '<div class="achvItem">🏅 新成就「' + d.name + '」· ' + d.desc + '</div>').join('') + '</div>'
+      ? '<div class="achvLine">🏅 新成就 ' + newly.length + ' 项：' +
+        newly.slice(0, 4).map((d) => d.name).join('、') +
+        (newly.length > 4 ? ' 等' : '') + '</div>'
       : '';
     const bustHTML = heroBusted
       ? '<div class="bustAlert"><b>⚠️ 又输光了</b><br>' +

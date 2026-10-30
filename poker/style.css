@@ -556,3 +556,60 @@ html.i18n-pending body{visibility:hidden}
   #topbar button{font-size:19px; padding:10px 16px; min-height:52px;}
   #topbar .stat{font-size:19px;}
 }
+
+/* ============================================================
+   电视：底池与结算面板可读性修正
+   ============================================================ */
+@media (min-width: 1500px) and (min-height: 780px){
+  /* 底池：放大 + 胶囊底 + 抬高层级，避免与上方座位信息打架 */
+  #board{top:56%;}
+  #pot{
+    display:inline-block; font-size:30px; font-weight:800; color:#ffe08a;
+    letter-spacing:1px; padding:8px 22px; margin-bottom:14px;
+    background:rgba(0,0,0,.62); border:1px solid rgba(245,197,66,.45);
+    border-radius:999px; box-shadow:0 6px 22px rgba(0,0,0,.45);
+    position:relative; z-index:6;
+  }
+  /* 上方座位整体上移，给底池让位 */
+  .seat[data-i="3"]{ top:0; }
+  .seat[data-i="2"], .seat[data-i="4"]{ top:6%; }
+
+  /* 玩家筹码：加粗放大 */
+  .seat .st{font-size:24px; font-weight:800; color:#ffd76a;}
+  .seat .nm{font-size:20px;}
+  .seat .info{padding:7px 12px;}
+
+  /* 结算面板：放大但压紧，适配一屏 */
+  .ovBody{font-size:22px; line-height:1.45;}
+  .res{padding:9px 14px; margin-bottom:6px;}
+  .res .rname{font-size:21px;}
+  .res .rh{font-size:18px;}
+  .res .rwin{font-size:24px; font-weight:800;}
+  .res .rcards .card{--card-w:calc(var(--card-base) * .56);}
+  .sessionNet{font-size:24px; margin:8px 0 4px;}
+  .sessionNet span{font-size:30px;}
+  .rbox h2{margin:2px 0 2px;}
+}
+.achvLine{
+  margin:6px 0 8px; padding:8px 14px; text-align:center;
+  color:#ffe08a; background:rgba(245,197,66,.12);
+  border:1px solid rgba(245,197,66,.4); border-radius:10px; font-weight:700;
+}
+@media (min-width: 1500px) and (min-height: 780px){
+  .achvLine{font-size:22px; padding:10px 18px; margin:6px 0 10px;}
+  .ovBody{font-size:28px; line-height:1.45;}
+  .res{padding:10px 16px; margin-bottom:7px;}
+  .res .rname{font-size:25px;}
+  .res .rh{font-size:21px;}
+  .res .rwin{font-size:28px;}
+  .sessionNet{font-size:30px; margin:10px 0 6px;}
+  .sessionNet span{font-size:36px;}
+  .ovBtns button{min-height:78px; font-size:24px;}
+}
+@media (min-width: 1500px) and (min-height: 780px){
+  /* 电视：弹层完全不透明，避免桌面透出干扰 */
+  #overlay{background:#04100a;}
+  html.light #overlay{background:#f8f6ef;}
+  .res .rh{color:#c9e0d4;}
+  .res.win{box-shadow:0 0 0 2px rgba(245,197,66,.55);}
+}
