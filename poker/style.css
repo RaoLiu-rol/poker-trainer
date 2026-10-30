@@ -509,3 +509,7 @@ html.light .achvSummary b,html.light .achvCatTitle span{color:#8a6a12}
 
 /* 多语言：翻译完成前隐藏正文，避免中文闪现 */
 html.i18n-pending body{visibility:hidden}
+
+/* 手柄焦点环 */
+.gp-focus{outline:3px solid #f3d98d; outline-offset:2px; border-radius:12px;
+  box-shadow:0 0 0 6px rgba(243,217,141,.18);}

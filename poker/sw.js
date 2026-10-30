@@ -7,6 +7,7 @@ const ASSETS = [
   './engine.js?v=18',
   './build-info.js?v=18',
   './i18n.js?v=18',
+  './gamepad.js?v=18',
   './app.js?v=18',
   './manifest.webmanifest',
   './icons/icon-192.png',
