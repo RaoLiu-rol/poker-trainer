@@ -513,3 +513,46 @@ html.i18n-pending body{visibility:hidden}
 /* 手柄焦点环 */
 .gp-focus{outline:3px solid #f3d98d; outline-offset:2px; border-radius:12px;
   box-shadow:0 0 0 6px rgba(243,217,141,.18);}
+
+/* ============================================================
+   电视 / 10 英尺界面（1920×1080 起）：牌、按钮、文字整体放大
+   ============================================================ */
+@media (min-width: 1500px) and (min-height: 780px){
+  :root{
+    --card-base: 86px;
+    --seat-w: 215px;
+    --seat-f: 19px;
+    --ui-f: 19px;
+  }
+  #log{font-size:18px;}
+  #logPanel{width:300px;}
+  #pot{font-size:20px;}
+  button.quick{font-size:18px; padding:12px 20px;}
+  button.actions{min-height:72px; font-size:22px;}
+  .ovBody{font-size:20px; line-height:1.55;}
+  .rbox{max-width:min(1180px, 90vw);}
+  .rbox h2{font-size:34px;}
+  .rbox .sub{font-size:19px;}
+  .ovBtns button{min-height:70px; font-size:21px; padding:18px 22px;}
+  .gp-focus{outline-width:5px; outline-offset:4px;}
+}
+
+/* 电视：座位信息与日志再放大一档 */
+@media (min-width: 1500px) and (min-height: 780px){
+  .seat .info{font-size:calc(var(--seat-f) * 1.06); padding:6px 10px;}
+  .seat .nm{font-size:calc(var(--seat-f) * 1.0);}
+  .seat .st{font-size:calc(var(--seat-f) * 1.08); font-weight:700;}
+  .seat .act,.seat .bet{font-size:calc(var(--seat-f) * 0.95);}
+  .seat .pos{font-size:calc(var(--seat-f) * 0.95); padding:2px 8px;}
+  #logTitle{font-size:18px; padding:10px 14px;}
+  #log{font-size:20px; line-height:1.7;}
+  #logPanel{width:270px;}
+  .histRow{font-size:18px;}
+}
+
+/* 电视：顶栏与状态栏再放大 */
+@media (min-width: 1500px) and (min-height: 780px){
+  #topbar{font-size:20px; padding:12px 18px;}
+  #topbar button{font-size:19px; padding:10px 16px; min-height:52px;}
+  #topbar .stat{font-size:19px;}
+}
