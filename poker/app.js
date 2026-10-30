@@ -1069,6 +1069,26 @@
     showOverlay('本手结束 · 全部手牌', html, buttons);
   }
 
+  /* ---------- 电视模式：底池移入顶栏，避免与上方座位/动作文字重叠 ---------- */
+  (function placePot() {
+    const pot = $('#pot'), topbar = $('#topbar'), board = $('#board');
+    if (!pot || !topbar || !board) return;
+    const mq = window.matchMedia('(min-width: 1500px) and (min-height: 780px)');
+    const apply = () => {
+      if (mq.matches) {
+        if (pot.parentNode !== topbar) {
+          topbar.insertBefore(pot, topbar.querySelector('.spacer') || null);
+          pot.classList.add('potTop');
+        }
+      } else if (pot.parentNode !== board) {
+        board.insertBefore(pot, board.firstChild);
+        pot.classList.remove('potTop');
+      }
+    };
+    apply();
+    if (mq.addEventListener) mq.addEventListener('change', apply);
+  })();
+
   /* ---------- 成就墙（独立一页，不再占用顶部信息） ---------- */
   function openAchvWall(onBack) {
     const total = ACHV_DEFS.length;

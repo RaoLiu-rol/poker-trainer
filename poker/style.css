@@ -562,7 +562,7 @@ html.i18n-pending body{visibility:hidden}
    ============================================================ */
 @media (min-width: 1500px) and (min-height: 780px){
   /* 底池：放大 + 胶囊底 + 抬高层级，避免与上方座位信息打架 */
-  #board{top:56%;}
+  #board{top:50%;}
   #pot{
     display:inline-block; font-size:30px; font-weight:800; color:#ffe08a;
     letter-spacing:1px; padding:8px 22px; margin-bottom:14px;
@@ -612,4 +612,11 @@ html.i18n-pending body{visibility:hidden}
   html.light #overlay{background:#f8f6ef;}
   .res .rh{color:#c9e0d4;}
   .res.win{box-shadow:0 0 0 2px rgba(245,197,66,.55);}
+}
+
+/* 电视：底池显示在顶栏 */
+#pot.potTop{
+  font-size:22px; font-weight:800; color:#ffe08a; letter-spacing:.5px;
+  padding:7px 16px; margin:0 10px; min-height:0; min-width:150px; text-align:center;
+  background:rgba(245,197,66,.13); border:1px solid rgba(245,197,66,.45); border-radius:999px;
 }
