@@ -1168,9 +1168,9 @@
   $('#btnHistory').addEventListener('click', () => openHistory(null));
   $('#btnAchv').addEventListener('click', () => openAchvWall(() => { startScreen(!!game.handNo); }));
   // 多语言切换
-  const langBtn = $('#btnLang');
+  const langBtn = $('#btnLang');   // 顶栏按钮已移除；语言入口保留在开始界面与结算面板
   function refreshLangBtn() {
-    if (!window.I18N) return;
+    if (!window.I18N || !langBtn) return;
     const cur = I18N.LANGS.find((x) => x.code === I18N.lang) || { short: '中' };
     langBtn.textContent = cur.short;
   }
@@ -1187,11 +1187,13 @@
       '<div class="tip">选择界面语言，切换后页面会重新加载；牌局进度、成就与历史都会保留。</div>',
       btns);
   }
-  langBtn.addEventListener('click', () => {
-    if (!window.I18N) return;
-    if (game.busy) { showToast('对局进行中，本手结束后再切换语言'); return; }
-    openLangPicker(null);
-  });
+  if (langBtn) {
+    langBtn.addEventListener('click', () => {
+      if (!window.I18N) return;
+      if (game.busy) { showToast('对局进行中，本手结束后再切换语言'); return; }
+      openLangPicker(null);
+    });
+  }
   $('#btnEquity').addEventListener('click', () => {
     const me = game.players[0];
     if (me.hole.length !== 2) { showToast('现在没有手牌'); return; }
