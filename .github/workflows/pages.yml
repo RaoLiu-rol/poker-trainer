@@ -22,7 +22,7 @@ jobs:
       - name: Build static site
         run: |
           mkdir -p dist/locale dist/icons
-          cp poker/index.html poker/style.css poker/engine.js poker/app.js poker/i18n.js dist/
+          cp poker/index.html poker/style.css poker/engine.js poker/app.js poker/i18n.js poker/build-info.js dist/
           cp poker/manifest.webmanifest poker/sw.js poker/privacy.html dist/
           cp poker/locale/*.js dist/locale/
           cp poker/icons/*.png dist/icons/
