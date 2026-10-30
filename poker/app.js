@@ -972,50 +972,55 @@
     const rec = game.history[game.history.length - 1] || { players: [], board: [] };
     const heroRec = rec.players[0] || {};
     const handName = heroRec.handName || '';
-    achv.hands++;
-    if (wonChips) {
-      achv.wins++;
-      achv.winStreak++;
-      if (achv.winStreak > achv.bestWinStreak) achv.bestWinStreak = achv.winStreak;
-    } else {
-      achv.winStreak = 0;
-    }
-    if (myNet > achv.biggestWin) achv.biggestWin = myNet;
-    if (heroBusted) achv.busted++;
-    if (botBusted > 0 && wonChips) achv.cleared += botBusted;
-    if (game.lastPot > achv.maxPot) achv.maxPot = game.lastPot;
-    if (sess > achv.bestNet) achv.bestNet = sess;
-    // 摊牌与牌型
-    const reachedSD = (rec.board || []).length === 5 && !heroRec.folded;
-    if (reachedSD) {
-      achv.showdowns++;
+    let newly = [];
+    try {
+      achv.hands++;
       if (wonChips) {
-        achv.showdownWins++;
-        achv.sdStreak++;
-        if (achv.sdStreak > achv.sdBestStreak) achv.sdBestStreak = achv.sdStreak;
-        if (handName) {
-          const t = achv.types;
-          if (handName.indexOf('皇家同花顺') >= 0) t.royal = 1;
-          else if (handName.indexOf('同花顺') >= 0) t.sf = 1;
-          else if (handName.indexOf('四条') >= 0) t.quads = 1;
-          else if (handName.indexOf('葫芦') >= 0) t.full = 1;
-          else if (handName.indexOf('同花') >= 0) t.flush = 1;
-          else if (handName.indexOf('顺子') >= 0) t.straight = 1;
-          else if (handName.indexOf('三条') >= 0) t.trips = 1;
-          else if (handName.indexOf('两对') >= 0) t.two = 1;
-          else if (handName.indexOf('一对') >= 0) t.pair = 1;
-          else if (handName.indexOf('高牌') >= 0) t.high = 1;
-        }
+        achv.wins++;
+        achv.winStreak++;
+        if (achv.winStreak > achv.bestWinStreak) achv.bestWinStreak = achv.winStreak;
       } else {
-        achv.sdStreak = 0;
+        achv.winStreak = 0;
       }
+      if (myNet > achv.biggestWin) achv.biggestWin = myNet;
+      if (heroBusted) achv.busted++;
+      if (botBusted > 0 && wonChips) achv.cleared += botBusted;
+      if (game.lastPot > achv.maxPot) achv.maxPot = game.lastPot;
+      if (sess > achv.bestNet) achv.bestNet = sess;
+      // 摊牌与牌型
+      const reachedSD = (rec.board || []).length === 5 && !heroRec.folded;
+      if (reachedSD) {
+        achv.showdowns++;
+        if (wonChips) {
+          achv.showdownWins++;
+          achv.sdStreak++;
+          if (achv.sdStreak > achv.sdBestStreak) achv.sdBestStreak = achv.sdStreak;
+          if (handName) {
+            const t = achv.types;
+            if (handName.indexOf('皇家同花顺') >= 0) t.royal = 1;
+            else if (handName.indexOf('同花顺') >= 0) t.sf = 1;
+            else if (handName.indexOf('四条') >= 0) t.quads = 1;
+            else if (handName.indexOf('葫芦') >= 0) t.full = 1;
+            else if (handName.indexOf('同花') >= 0) t.flush = 1;
+            else if (handName.indexOf('顺子') >= 0) t.straight = 1;
+            else if (handName.indexOf('三条') >= 0) t.trips = 1;
+            else if (handName.indexOf('两对') >= 0) t.two = 1;
+            else if (handName.indexOf('一对') >= 0) t.pair = 1;
+            else if (handName.indexOf('高牌') >= 0) t.high = 1;
+          }
+        } else {
+          achv.sdStreak = 0;
+        }
+      }
+      if (heroRec.allIn) { if (wonChips) achv.allinWins++; else achv.allinLosses++; }
+      const dk = todayStr();
+      achv.days[dk] = (achv.days[dk] || 0) + 1;
+      persistAchv();
+      newly = achvCheck();
+      newly.forEach((d) => showToast('🏅 解锁「' + d.name + '」 ' + d.desc, 3800));
+    } catch (e) {
+      console.warn('[achv] 成就统计失败，不影响结算', e);
     }
-    if (heroRec.allIn) { if (wonChips) achv.allinWins++; else achv.allinLosses++; }
-    const dk = todayStr();
-    achv.days[dk] = (achv.days[dk] || 0) + 1;
-    persistAchv();
-    const newly = achvCheck();
-    newly.forEach((d) => showToast('🏅 解锁「' + d.name + '」 ' + d.desc, 3800));
     const achvHTML = newly.length
       ? '<div class="achvList">' + newly.map((d) => '<div class="achvItem">🏅 新成就「' + d.name + '」· ' + d.desc + '</div>').join('') + '</div>'
       : '';
@@ -1216,8 +1221,15 @@
   log('每手结束会亮出所有人的手牌，并自动存一份复盘到' + (IS_NATIVE ? '手机本地。' : ' notes/hands/。'));
   if (history.length) log('本地已有 ' + history.length + ' 手历史，点右上角「历史」查看。');
 
-  // 直接进入开始界面（不再弹开机提示）
-  startScreen(!!resumed);
+  // 开机提示：仅 debug 构建显示（发行版/web 版不显示）
+  if (window.POKER_BUILD && window.POKER_BUILD.debug) {
+    showOverlay('使用提示',
+      '<div class="noticeMain">仅供梅花小兄弟内部交流</div>' +
+      '<div class="tip">本工具仅用于牌局复盘与学习，请勿用于任何形式的赌博。</div>',
+      [{ label: '我已了解', cls: 'primary', onClick: () => { hideOverlay(); startScreen(!!resumed); } }]);
+  } else {
+    startScreen(!!resumed);
+  }
 
   // 多语言初始化
   if (window.I18N) { I18N.init(); refreshLangBtn(); }

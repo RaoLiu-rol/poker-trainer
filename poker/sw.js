@@ -5,6 +5,7 @@ const ASSETS = [
   './index.html',
   './style.css?v=16',
   './engine.js?v=16',
+  './build-info.js?v=16',
   './i18n.js?v=16',
   './app.js?v=16',
   './manifest.webmanifest',
