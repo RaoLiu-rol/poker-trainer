@@ -114,6 +114,14 @@
     if (code !== 'zh' && !I18N.dicts[code]) code = 'en';
     I18N.lang = code;
     try { localStorage.setItem('poker.lang.v1', code); } catch (e) {}
+    // 用户主动选择优先于 URL 的 ?lang=xx（否则刷新后又被参数覆盖）
+    try {
+      const u = new URL(location.href);
+      if (u.searchParams.has('lang')) {
+        u.searchParams.delete('lang');
+        history.replaceState(null, '', u.toString());
+      }
+    } catch (e) {}
     document.documentElement.setAttribute('lang', code === 'zh' ? 'zh-CN' : code);
     if (!silent) {
       // 中文原文可能已被替换，重载最稳

@@ -1061,7 +1061,8 @@
     }
     buttons.push({ label: '📜 历史', cls: 'ghost', onClick: () => openHistory(buttons) });
     lastHandBody = html;
-    handOverButtons = buttons.filter((b) => /下一手|再买入|清零/.test(b.label));
+    buttons.push({ label: '🌐 语言', cls: 'ghost', onClick: () => openLangPicker(() => showOverlay('本手结束 · 全部手牌', lastHandBody, handOverButtons)) });
+    handOverButtons = buttons.slice();
     showOverlay('本手结束 · 全部手牌', html, buttons);
   }
 
@@ -1130,6 +1131,7 @@
     }
     buttons.push({ label: '🏅 成就墙', cls: 'ghost', onClick: () => openAchvWall(() => startScreen(resumed)) });
     buttons.push({ label: '历史', cls: 'ghost', onClick: () => openHistory(null) });
+    buttons.push({ label: '🌐 语言', cls: 'ghost', onClick: () => openLangPicker(() => startScreen(resumed)) });
     showOverlay(resumed ? '继续牌局' : '德州扑克 · 六人桌', body, buttons);
   }
 
@@ -1172,15 +1174,23 @@
     const cur = I18N.LANGS.find((x) => x.code === I18N.lang) || { short: '中' };
     langBtn.textContent = cur.short;
   }
+  // 语言选择：可从顶栏、开始界面、结算面板打开，并支持返回
+  function openLangPicker(back) {
+    if (!window.I18N) return;
+    const btns = I18N.LANGS.map((l) => ({
+      label: (l.code === I18N.lang ? '✓ ' : '') + l.name,
+      cls: l.code === I18N.lang ? 'primary' : 'ghost',
+      onClick: () => I18N.setLang(l.code)
+    }));
+    btns.push({ label: '返回', cls: 'ghost', onClick: () => { if (back) back(); else hideOverlay(); } });
+    showOverlay('语言 / Language',
+      '<div class="tip">选择界面语言，切换后页面会重新加载；牌局进度、成就与历史都会保留。</div>',
+      btns);
+  }
   langBtn.addEventListener('click', () => {
     if (!window.I18N) return;
     if (game.busy) { showToast('对局进行中，本手结束后再切换语言'); return; }
-    showOverlay('语言 / Language',
-      '<div class="tip">选择界面语言（切换后自动重新加载）</div>',
-      I18N.LANGS.map((l) => ({
-        label: l.name, cls: l.code === I18N.lang ? 'primary' : 'ghost',
-        onClick: () => I18N.setLang(l.code)
-      })));
+    openLangPicker(null);
   });
   $('#btnEquity').addEventListener('click', () => {
     const me = game.players[0];
