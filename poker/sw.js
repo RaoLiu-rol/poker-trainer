@@ -1,13 +1,13 @@
 /* sw.js — 离线缓存（PWA / Microsoft Store 打包用） */
-const CACHE = 'pokersim-v17';
+const CACHE = 'pokersim-v18';
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=16',
-  './engine.js?v=16',
-  './build-info.js?v=16',
-  './i18n.js?v=16',
-  './app.js?v=16',
+  './style.css?v=17',
+  './engine.js?v=17',
+  './build-info.js?v=17',
+  './i18n.js?v=17',
+  './app.js?v=17',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png',

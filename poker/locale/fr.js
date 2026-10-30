@@ -576,5 +576,8 @@
     "阿May": "May",
     "老K": "Kay",
     "阿豪": "Hao",
+    "🌐 语言": "🌐 Langue",
+    "选择界面语言，切换后页面会重新加载；牌局进度、成就与历史都会保留。": "Choisissez la langue de l'interface. La page se recharge ensuite ; progression, succès et historique sont conservés.",
+    "对局进行中，本手结束后再切换语言": "Une main est en cours — changez de langue à la fin de la main",
   });
 })();

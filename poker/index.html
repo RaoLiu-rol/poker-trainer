@@ -19,10 +19,12 @@
   } catch (e) {}
 })();
 </script>
+<script>/* 语言不是中文时先隐藏正文，避免中文闪现 */
+try{var _q=new URLSearchParams(location.search).get("lang")||"";var _l=_q||localStorage.getItem("poker.lang.v1")||"";if(_l&&_l!=="zh")document.documentElement.classList.add("i18n-pending");}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
-<link rel="stylesheet" href="style.css?v=16">
+<link rel="stylesheet" href="style.css?v=17">
 </head>
 <body>
 <div id="app">
@@ -79,16 +81,16 @@
   </div>
 </div>
 
-<script src="engine.js?v=16"></script>
-<script src="build-info.js?v=16"></script>
-<script src="i18n.js?v=16"></script>
-<script src="locale/en.js?v=16"></script>
-<script src="locale/ja.js?v=16"></script>
-<script src="locale/ko.js?v=16"></script>
-<script src="locale/es.js?v=16"></script>
-<script src="locale/pt.js?v=16"></script>
-<script src="locale/de.js?v=16"></script>
-<script src="locale/fr.js?v=16"></script>
-<script src="app.js?v=16"></script>
+<script src="engine.js?v=17"></script>
+<script src="build-info.js?v=17"></script>
+<script src="i18n.js?v=17"></script>
+<script src="locale/en.js?v=17"></script>
+<script src="locale/ja.js?v=17"></script>
+<script src="locale/ko.js?v=17"></script>
+<script src="locale/es.js?v=17"></script>
+<script src="locale/pt.js?v=17"></script>
+<script src="locale/de.js?v=17"></script>
+<script src="locale/fr.js?v=17"></script>
+<script src="app.js?v=17"></script>
 </body>
 </html>

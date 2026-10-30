@@ -154,14 +154,14 @@
     } catch (e) {}
     if (I18N.lang !== 'zh') {
       I18N.apply(document.body);
+      document.documentElement.classList.remove('i18n-pending');
       // 动态渲染的内容也自动翻译
       let queued = false;
       const schedule = () => {
         if (queued || I18N._applying) return;
         queued = true;
-        const run = () => { queued = false; I18N.apply(document.body); };
-        if (window.requestAnimationFrame) requestAnimationFrame(() => setTimeout(run, 40));
-        else setTimeout(run, 60);
+        // 同步应用：MutationObserver 回调在绘制前执行，避免每次渲染闪一下中文
+        try { I18N.apply(document.body); } finally { queued = false; }
       };
       const mo = new MutationObserver(schedule);
       mo.observe(document.body, { childList: true, subtree: true, characterData: true });
