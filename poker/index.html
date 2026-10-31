@@ -24,25 +24,43 @@ try{var _q=new URLSearchParams(location.search).get("lang")||"";var _l=_q||local
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="icons/favicon-32.png" sizes="32x32">
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 <div id="app">
   <header id="topbar">
-    <div class="stat" id="handNo">第 0 手</div>
-    <button id="btnBlinds" class="blindBtn" title="设置盲注">盲注 <b>5/10</b></button>
+    <div class="statusChip">
+      <button id="btnBlinds" class="chipBlindBtn" title="设置盲注">盲注 <b id="blindTxt">5/10</b></button>
+      <span class="chipDot">·</span>
+      <span id="potSlot"><span id="pot"></span></span>
+    </div>
     <div class="spacer"></div>
-    <button id="btnTheme" class="ghost" title="切换浅色/深色">浅色</button>
-    <button id="btnAchv" class="ghost" title="成就墙">🏅</button>
-    <button id="btnHistory" class="ghost">历史</button>
-    <button id="btnEquity" class="ghost">权益</button>
-    <button id="btnRebuy" class="ghost">＋1000</button>
+    <button id="btnMenu" class="ghost menuBtn" title="菜单" aria-label="菜单">☰</button>
+
+    <div id="legacyBtns" hidden>
+      <button id="btnTheme" class="ghost">浅色</button>
+      <button id="btnAchv" class="ghost">🏅</button>
+      <button id="btnHistory" class="ghost">历史</button>
+      <button id="btnEquity" class="ghost">权益</button>
+      <button id="btnRebuy" class="ghost">＋1000</button>
+      <div class="stat" id="handNo">第 0 手</div>
+    </div>
+
+    <div id="menuPanel" class="menuPanel" hidden>
+      <div class="menuHead"><span id="menuHand">第 0 手</span><span class="menuClose" id="menuClose">✕</span></div>
+      <button class="menuItem" data-act="theme"><i>🌓</i><span>浅色 / 深色</span></button>
+      <button class="menuItem" data-act="achv"><i>🏅</i><span>成就墙</span></button>
+      <button class="menuItem" data-act="history"><i>🕘</i><span>历史</span></button>
+      <button class="menuItem" data-act="equity"><i>📈</i><span>权益</span></button>
+      <button class="menuItem" data-act="rebuy"><i>➕</i><span>＋1000</span></button>
+      <button class="menuItem" data-act="lang"><i>🌐</i><span>语言</span><em id="menuLangCur">简体中文</em></button>
+      <div id="menuLangList" class="menuLangList" hidden></div>
+    </div>
   </header>
 
   <div id="table">
     <div class="felt"></div>
     <div id="board">
-      <div id="pot"></div>
       <div id="community"></div>
     </div>
   </div>
@@ -80,17 +98,17 @@ try{var _q=new URLSearchParams(location.search).get("lang")||"";var _l=_q||local
   </div>
 </div>
 
-<script src="engine.js?v=19"></script>
-<script src="build-info.js?v=19"></script>
-<script src="i18n.js?v=19"></script>
-<script src="locale/en.js?v=19"></script>
-<script src="locale/ja.js?v=19"></script>
-<script src="locale/ko.js?v=19"></script>
-<script src="locale/es.js?v=19"></script>
-<script src="locale/pt.js?v=19"></script>
-<script src="locale/de.js?v=19"></script>
-<script src="locale/fr.js?v=19"></script>
-<script src="gamepad.js?v=19"></script>
-<script src="app.js?v=19"></script>
+<script src="engine.js?v=20"></script>
+<script src="build-info.js?v=20"></script>
+<script src="i18n.js?v=20"></script>
+<script src="locale/en.js?v=20"></script>
+<script src="locale/ja.js?v=20"></script>
+<script src="locale/ko.js?v=20"></script>
+<script src="locale/es.js?v=20"></script>
+<script src="locale/pt.js?v=20"></script>
+<script src="locale/de.js?v=20"></script>
+<script src="locale/fr.js?v=20"></script>
+<script src="gamepad.js?v=20"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>

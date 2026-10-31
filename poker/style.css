@@ -620,3 +620,77 @@ html.i18n-pending body{visibility:hidden}
   padding:7px 16px; margin:0 10px; min-height:0; min-width:150px; text-align:center;
   background:rgba(245,197,66,.13); border:1px solid rgba(245,197,66,.45); border-radius:999px;
 }
+
+/* ============================================================
+   顶栏（方案三）：状态胶囊 + 菜单
+   ============================================================ */
+#topbar{position:relative;}
+.statusChip{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 14px; border-radius:999px; white-space:nowrap;
+  background:rgba(255,255,255,.07); border:1px solid var(--border);
+  color:var(--text); font-size:var(--ui-f); font-weight:600;
+  max-width:66vw; overflow:hidden;
+}
+.statusChip .chipBlind{color:var(--text);}
+.statusChip .chipBlind b{color:#ffe08a; font-weight:800;}
+.statusChip .chipDot{color:var(--muted); opacity:.7;}
+.statusChip .chipPot{display:inline-flex; align-items:center; min-width:0;}
+.statusChip #pot{
+  font-size:inherit; color:#ffe08a; font-weight:800; letter-spacing:0;
+  margin:0; padding:0; background:none; border:none; box-shadow:none;
+  min-height:0; display:inline;
+}
+.menuBtn{font-size:19px; min-width:46px; min-height:44px; line-height:1;}
+
+.menuPanel{
+  position:absolute; right:10px; top:calc(100% + 6px); z-index:70;
+  width:262px; max-width:calc(100vw - 24px);
+  background:#0d2419; border:1px solid var(--border); border-radius:14px;
+  box-shadow:0 18px 40px rgba(0,0,0,.55); padding:8px; overflow:hidden;
+}
+html.light .menuPanel{background:#fbf9f2;}
+.menuHead{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:6px 8px 8px; font-size:calc(var(--ui-f) * .92); color:var(--muted);
+  border-bottom:1px solid var(--border); margin-bottom:6px;
+}
+.menuClose{padding:2px 8px; cursor:pointer; opacity:.75;}
+.menuItem{
+  display:flex; align-items:center; gap:10px; width:100%;
+  padding:11px 10px; margin:2px 0; border-radius:10px;
+  background:transparent; border:none; color:var(--text);
+  font-size:var(--ui-f); text-align:left; cursor:pointer;
+}
+.menuItem i{font-style:normal; font-size:17px; width:22px; text-align:center;}
+.menuItem span{flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.menuItem em{font-style:normal; color:var(--muted); font-size:calc(var(--ui-f) * .85);}
+.menuItem:hover,.menuItem:active{background:rgba(255,255,255,.08);}
+html.light .menuItem:hover,html.light .menuItem:active{background:rgba(0,0,0,.06);}
+.menuLangList{display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:4px 4px 2px;}
+.menuLangList button{
+  padding:10px 8px; border-radius:9px; background:rgba(255,255,255,.06);
+  border:1px solid var(--border); color:var(--text);
+  font-size:calc(var(--ui-f) * .92); cursor:pointer; white-space:nowrap;
+}
+.menuLangList button.on{background:rgba(46,204,113,.22); border-color:var(--accent); color:#d9ffe9;}
+.menuLangList button.pending{border-color:var(--gold); color:#ffe08a;}
+
+/* 电视：菜单整体放大 */
+@media (min-width: 1500px) and (min-height: 780px){
+  .statusChip{font-size:22px; padding:12px 20px; max-width:60vw;}
+  .statusChip #pot{font-size:22px;}
+  .menuBtn{font-size:26px; min-width:64px; min-height:58px;}
+  .menuPanel{width:380px; padding:12px; border-radius:18px;}
+  .menuItem{font-size:22px; padding:16px 14px; border-radius:14px;}
+  .menuItem i{font-size:24px; width:32px;}
+  .menuItem em{font-size:19px;}
+  .menuLangList button{font-size:20px; padding:14px 10px;}
+  .menuHead{font-size:19px;}
+}
+
+.statusChip .chipBlindBtn{
+  background:none; border:none; padding:0; margin:0; cursor:pointer;
+  color:inherit; font:inherit; font-weight:600; display:inline-flex; align-items:center; gap:6px;
+}
+.statusChip .chipBlindBtn b{color:#ffe08a; font-weight:800;}

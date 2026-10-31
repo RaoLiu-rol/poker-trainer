@@ -288,6 +288,8 @@
   /* ---------- 历史存储 ---------- */
   let history = [];
   let autoSave = true;
+  let pendingLang = null;
+  let handLive = false;      // 是否有一手正在进行（结算前）
   let lastHandBody = '';        // 结算面板正文，历史返回时恢复
   let handOverButtons = [];     // 结算面板按钮，供历史面板「返回」恢复
   try {
@@ -1066,27 +1068,14 @@
     lastHandBody = html;
     buttons.push({ label: '🌐 语言', cls: 'ghost', onClick: () => openLangPicker(() => showOverlay('本手结束 · 全部手牌', lastHandBody, handOverButtons)) });
     handOverButtons = buttons.slice();
+    handLive = false;
     showOverlay('本手结束 · 全部手牌', html, buttons);
   }
 
-  /* ---------- 电视模式：底池移入顶栏，避免与上方座位/动作文字重叠 ---------- */
+  /* ---------- 底池固定在顶栏状态胶囊内 ---------- */
   (function placePot() {
-    const pot = $('#pot'), topbar = $('#topbar'), board = $('#board');
-    if (!pot || !topbar || !board) return;
-    const mq = window.matchMedia('(min-width: 1500px) and (min-height: 780px)');
-    const apply = () => {
-      if (mq.matches) {
-        if (pot.parentNode !== topbar) {
-          topbar.insertBefore(pot, topbar.querySelector('.spacer') || null);
-          pot.classList.add('potTop');
-        }
-      } else if (pot.parentNode !== board) {
-        board.insertBefore(pot, board.firstChild);
-        pot.classList.remove('potTop');
-      }
-    };
-    apply();
-    if (mq.addEventListener) mq.addEventListener('change', apply);
+    const pot = $('#pot'), slot = $('#potSlot');
+    if (pot && slot && pot.parentNode !== slot) slot.appendChild(pot);
   })();
 
   /* ---------- 成就墙（独立一页，不再占用顶部信息） ---------- */
@@ -1121,12 +1110,17 @@
 
   /* ---------- 流程 ---------- */
   function nextHand() {
+    if (pendingLang && window.I18N && pendingLang !== I18N.lang) {
+      I18N.setLangLive(pendingLang);
+      pendingLang = null;
+    }
     if (game.busy) return;
     if (pendingBlinds) {
       P.setBlinds(pendingBlinds.sb, pendingBlinds.bb);
       pendingBlinds = null;
     }
     game.startHand().catch((e) => { log('⚠️ ' + e.message); console.error(e); });
+    handLive = true;
   }
   function startScreen(resumed) {
     const me = game.players[0];
@@ -1189,6 +1183,110 @@
   $('#btnRebuy').addEventListener('click', () => { if (!game.busy) { game.rebuy(0); saveState(); } });
   $('#btnBlinds').addEventListener('click', openBlinds);
   $('#btnHistory').addEventListener('click', () => openHistory(null));
+
+  /* ---------- 顶栏菜单（方案三）：状态胶囊 + ☰ ---------- */
+  (function initMenu() {
+    const btn = $('#btnMenu');
+    const panel = $('#menuPanel');
+    const closeBtn = $('#menuClose');
+    const list = $('#menuLangList');
+    const curLabel = $('#menuLangCur');
+    const menuHand = $('#menuHand');
+    if (!btn || !panel) return;
+
+    const langName = (code) => {
+      const l = window.I18N && I18N.LANGS.find((x) => x.code === code);
+      return l ? l.name : code;
+    };
+
+    function buildLangList() {
+      if (!window.I18N || !list) return;
+      const active = pendingLang || I18N.lang;
+      list.innerHTML = I18N.LANGS.map((l) =>
+        '<button data-code="' + l.code + '" class="' +
+        (l.code === I18N.lang ? 'on ' : '') + (l.code === pendingLang ? 'pending' : '') + '">' +
+        (l.code === active ? '✓ ' : '') + l.name + '</button>'
+      ).join('');
+      list.querySelectorAll('button').forEach((b) => {
+        b.addEventListener('click', () => { requestLang(b.getAttribute('data-code')); });
+      });
+      if (curLabel) curLabel.textContent = langName(active);
+    }
+
+    function openMenu() {
+      panel.hidden = false;
+      const hn = $('#handNo');
+      if (menuHand && hn) menuHand.textContent = hn.textContent;
+      buildLangList();
+      if (list) list.hidden = true;
+    }
+    function closeMenu() { panel.hidden = true; if (list) list.hidden = true; }
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      panel.hidden ? openMenu() : closeMenu();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    document.addEventListener('click', (e) => {
+      if (panel.hidden) return;
+      if (panel.contains(e.target) || e.target === btn) return;
+      closeMenu();
+    });
+
+    panel.querySelectorAll('.menuItem').forEach((item) => {
+      item.addEventListener('click', () => {
+        const act = item.getAttribute('data-act');
+        if (act === 'lang') {
+          if (list) list.hidden = !list.hidden;
+          return;
+        }
+        if (act === 'rebuy') {
+          if (game.busy) { showToast('对局进行中，本手结束后再买入'); return; }
+          closeMenu();
+          $('#btnRebuy').click();
+          return;
+        }
+        closeMenu();
+        const map = { theme: '#btnTheme', achv: '#btnAchv', history: '#btnHistory', equity: '#btnEquity' };
+        const target = $(map[act]);
+        if (target) target.click();
+      });
+    });
+
+    // 供外部（其他弹层的语言选择）复用
+    window.__requestLang = requestLang;
+  })();
+
+  // 语言切换：对局中排队到下一局，否则立即生效
+  function requestLang(code) {
+    if (!window.I18N) return;
+    if (code === I18N.lang && !pendingLang) { showToast('当前已是' + langNameOf(code)); return; }
+    if (handLive || game.busy) {
+      pendingLang = code;
+      showToast('已选择 ' + langNameOf(code) + '，下一局生效', 2600);
+    } else {
+      I18N.setLangLive(code);
+      pendingLang = null;
+      showToast('已切换为 ' + langNameOf(code));
+    }
+    const cur = $('#menuLangCur');
+    if (cur) cur.textContent = langNameOf(pendingLang || I18N.lang);
+    const list = $('#menuLangList');
+    if (list && !list.hidden) {
+      list.querySelectorAll('button').forEach((b) => {
+        const c = b.getAttribute('data-code');
+        b.className = (c === I18N.lang ? 'on ' : '') + (c === pendingLang ? 'pending' : '');
+        b.textContent = ((pendingLang || I18N.lang) === c ? '✓ ' : '') + langNameOf(c);
+      });
+    }
+  }
+
+  function langNameOf(code) {
+    if (!window.I18N) return code;
+    const l = I18N.LANGS.find((x) => x.code === code);
+    return l ? l.name : code;
+  }
+
   $('#btnAchv').addEventListener('click', () => openAchvWall(() => { startScreen(!!game.handNo); }));
   // 多语言切换
   const langBtn = $('#btnLang');   // 顶栏按钮已移除；语言入口保留在开始界面与结算面板

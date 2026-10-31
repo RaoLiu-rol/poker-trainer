@@ -91,6 +91,7 @@
         if (/[\u4e00-\u9fa5]/.test(n.nodeValue)) targets.push(n);
       }
       targets.forEach((t) => {
+        if (t.__i18nOrig == null) t.__i18nOrig = t.nodeValue;   // 记住中文原文
         const v = fixPlurals(translateText(t.nodeValue, pairs), I18N.lang);
         if (v !== t.nodeValue) t.nodeValue = v;
       });
@@ -101,13 +102,58 @@
           const v = el.getAttribute(a);
           if (v && /[\u4e00-\u9fa5]/.test(v)) {
             const nv = translateText(v, pairs);
-            if (nv !== v) el.setAttribute(a, nv);
+            if (nv !== v) {
+              el.__i18nOrigAttrs = el.__i18nOrigAttrs || {};
+              if (el.__i18nOrigAttrs[a] == null) el.__i18nOrigAttrs[a] = v;
+              el.setAttribute(a, nv);
+            }
           }
         });
       });
     } finally {
       I18N._applying = false;
     }
+  };
+
+  // 恢复 DOM 上的中文原文（切换语言前调用）
+  I18N.restore = function (node) {
+    const root = node || document.body;
+    if (!root) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    let n;
+    while ((n = walker.nextNode())) {
+      if (n.__i18nOrig != null) { n.nodeValue = n.__i18nOrig; n.__i18nOrig = null; }
+    }
+    const els = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    els.forEach((el) => {
+      if (el.__i18nOrigAttrs) {
+        Object.keys(el.__i18nOrigAttrs).forEach((a) => {
+          try { el.setAttribute(a, el.__i18nOrigAttrs[a]); } catch (e) {}
+        });
+        el.__i18nOrigAttrs = null;
+      }
+    });
+  };
+
+  // 就地切换语言（不刷新页面）
+  I18N.setLangLive = function (code) {
+    if (code !== 'zh' && !I18N.dicts[code]) code = 'en';
+    I18N.restore(document.body);
+    I18N.lang = code;
+    try { localStorage.setItem('poker.lang.v1', code); } catch (e) {}
+    try {
+      const u = new URL(location.href);
+      if (u.searchParams.has('lang')) {
+        u.searchParams.delete('lang');
+        history.replaceState(null, '', u.toString());
+      }
+    } catch (e) {}
+    document.documentElement.setAttribute('lang', code === 'zh' ? 'zh-CN' : code);
+    try {
+      if (!I18N._origTitle) I18N._origTitle = document.title;
+      document.title = code === 'zh' ? I18N._origTitle : I18N.tr(I18N._origTitle);
+    } catch (e) {}
+    if (code !== 'zh') I18N.apply(document.body);
   };
 
   I18N.setLang = function (code, silent) {
