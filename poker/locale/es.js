@@ -579,5 +579,13 @@
     "🌐 语言": "🌐 Idioma",
     "选择界面语言，切换后页面会重新加载；牌局进度、成就与历史都会保留。": "Elige el idioma de la interfaz. La página se recarga al cambiar; el progreso, los logros y el historial se conservan.",
     "对局进行中，本手结束后再切换语言": "Hay una mano en curso: cambia el idioma cuando termine",
+    "买入": "Recompra",
+    "菜单": "Menú",
+    "字号": "Tamaño de texto",
+    "迷你": "Mínimo",
+    "小号": "Pequeño",
+    "标准": "Estándar",
+    "大号": "Grande",
+    "特大": "Enorme",
   });
 })();

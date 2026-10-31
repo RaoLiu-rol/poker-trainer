@@ -1067,7 +1067,6 @@
     }
     buttons.push({ label: '📜 历史', cls: 'ghost', onClick: () => openHistory(buttons) });
     lastHandBody = html;
-    buttons.push({ label: '🌐 语言', cls: 'ghost', onClick: () => openLangPicker(() => showOverlay('本手结束 · 全部手牌', lastHandBody, handOverButtons)) });
     handOverButtons = buttons.slice();
     handLive = false;
     showOverlay('本手结束 · 全部手牌', html, buttons);
@@ -1168,7 +1167,6 @@
     }
     buttons.push({ label: '🏅 成就墙', cls: 'ghost', onClick: () => openAchvWall(() => startScreen(resumed)) });
     buttons.push({ label: '历史', cls: 'ghost', onClick: () => openHistory(null) });
-    buttons.push({ label: '🌐 语言', cls: 'ghost', onClick: () => openLangPicker(() => startScreen(resumed)) });
     showOverlay(resumed ? '继续牌局' : '德州扑克 · 六人桌', body, buttons);
   }
 
@@ -1206,7 +1204,7 @@
 
   /* ---------- 字号开关：小 / 标准 / 大 / 特大 ---------- */
   const FS_KEY = 'poker.font.v1';
-  const FS_LEVELS = [{ k: 's', n: '小' }, { k: 'm', n: '标准' }, { k: 'l', n: '大' }, { k: 'xl', n: '特大' }];
+  const FS_LEVELS = [{ k: 'xs', n: '迷你' }, { k: 's', n: '小号' }, { k: 'm', n: '标准' }, { k: 'l', n: '大号' }, { k: 'xl', n: '特大' }];
 
   function currentFont() {
     try {
@@ -1218,7 +1216,7 @@
   function applyFont(level) {
     const k = FS_LEVELS.some((x) => x.k === level) ? level : 'm';
     const el = document.documentElement;
-    el.classList.remove('fs-s', 'fs-m', 'fs-l', 'fs-xl');
+    el.classList.remove('fs-xs', 'fs-s', 'fs-m', 'fs-l', 'fs-xl');
     el.classList.add('fs-' + k);
     try { localStorage.setItem(FS_KEY, k); } catch (e) {}
     return k;
@@ -1258,12 +1256,21 @@
       if (curLabel) curLabel.textContent = langName(active);
     }
 
-    function openMenu() {
+    function positionPanel(anchorEl) {
+      const r = (anchorEl || btn).getBoundingClientRect();
+      panel.style.top = Math.round(r.bottom + 6) + 'px';
+      panel.style.right = Math.max(8, Math.round(window.innerWidth - r.right)) + 'px';
+    }
+
+    function openMenu(anchorEl) {
+      positionPanel(anchorEl);
       panel.hidden = false;
       const hn = $('#handNo');
       if (menuHand && hn) menuHand.textContent = hn.textContent;
       buildLangList();
       if (list) list.hidden = true;
+      const rl = $('#menuRebuyLbl');
+      if (rl) rl.textContent = '买入 ＋' + game.currentBuyIn();
     }
     function closeMenu() { panel.hidden = true; if (list) list.hidden = true; }
 
@@ -1291,8 +1298,16 @@
 
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      panel.hidden ? openMenu() : closeMenu();
+      panel.hidden ? openMenu(btn) : closeMenu();
     });
+
+    const ovBtn = $('#ovMenu');
+    if (ovBtn) {
+      ovBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.hidden ? openMenu(ovBtn) : closeMenu();
+      });
+    }
     if (closeBtn) closeBtn.addEventListener('click', closeMenu);
     document.addEventListener('click', (e) => {
       if (panel.hidden) return;

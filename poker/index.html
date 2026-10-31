@@ -53,7 +53,7 @@ try{var _q=new URLSearchParams(location.search).get("lang")||"";var _l=_q||local
       <button class="menuItem" data-act="achv"><i>🏅</i><span>成就墙</span></button>
       <button class="menuItem" data-act="history"><i>🕘</i><span>历史</span></button>
       <button class="menuItem" data-act="equity"><i>📈</i><span>权益</span></button>
-      <button class="menuItem" data-act="rebuy"><i>➕</i><span>＋1000</span></button>
+      <button class="menuItem" data-act="rebuy"><i>➕</i><span id="menuRebuyLbl">买入 ＋1000</span></button>
       <button class="menuItem" data-act="font"><i>🔠</i><span>字号</span><em id="menuFontCur">标准</em></button>
       <div id="menuFontList" class="menuLangList" hidden></div>
       <button class="menuItem" data-act="lang"><i>🌐</i><span>语言</span><em id="menuLangCur">简体中文</em></button>
@@ -95,6 +95,7 @@ try{var _q=new URLSearchParams(location.search).get("lang")||"";var _l=_q||local
 </div>
 
 <div id="overlay">
+  <button id="ovMenu" class="ovMenuBtn" title="菜单" aria-label="菜单">☰</button>
   <div class="rbox">
     <h2 id="ovTitle">德州扑克 · 六人桌</h2>
     <div id="ovBody" class="ovBody"></div>
