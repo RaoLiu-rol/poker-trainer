@@ -1083,8 +1083,9 @@
   /* 结算面板：按视口直接写行内尺寸，避免被 .card.big 的变量链覆盖 */
   function sizeResultCards() {
     const vw = window.innerWidth || 1280;
-    const bw = Math.round(Math.min(78, Math.max(50, vw * 0.046)));
-    const rw = Math.round(Math.min(62, Math.max(40, vw * 0.036)));
+    // 手机端回到 1.43 的牌面尺寸；平板及以上按视口放大
+    const bw = vw < 600 ? 35 : Math.round(Math.min(78, Math.max(50, vw * 0.046)));
+    const rw = vw < 600 ? 30 : Math.round(Math.min(62, Math.max(40, vw * 0.036)));
     const apply = (el, w) => {
       el.style.width = w + 'px';
       el.style.height = Math.round(w * 1.4) + 'px';
