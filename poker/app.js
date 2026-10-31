@@ -1038,7 +1038,7 @@
     let inner = bustHTML + achvHTML +
       '<div class="sessionNet ' + clsNet(sess) + '">您此周期内总输赢 <span>' + fmtNet(sess) + '</span> 分</div>' +
       '<div class="sub">本手底池 ' + game.lastPot + ' 分 · 本手净 <b class="' + clsNet(myNet) + '">' + fmtNet(myNet) + '</b></div>' +
-      '<div class="boardRow">' +
+      '<div class="boardRow" style="--card-w:clamp(50px,4.6vw,78px)">' +
       (game.community.length ? game.community.map(cardHTML).join('') : '<span class="rh">未进入翻牌</span>') +
       '</div>';
     game.players.forEach((p) => {
@@ -1050,7 +1050,7 @@
       const netTxt = net > 0 ? '+' + net : (net < 0 ? '−' + Math.abs(net) : '0');
       const netCls = net > 0 ? 'plus' : (net < 0 ? 'minus' : 'zero');
       inner += '<div class="res' + (net > 0 ? ' win' : '') + '">' +
-        '<div class="rcards">' + cards + '</div>' +
+        '<div class="rcards" style="--card-w:clamp(40px,3.6vw,60px)">' + cards + '</div>' +
         '<div class="rmeta"><div class="rname">' + (game.posLabels[p.id] || '') + ' ' + p.name + (p.human ? '（你）' : '') + '</div>' +
         '<div class="rh">' + (p.human ? '' : (p.styleName ? p.styleName + ' · ' : '')) + hn + ' · ' + start + ' → ' + p.stack + '</div></div>' +
         '<div class="rwin ' + netCls + '">' + netTxt + '</div></div>';
@@ -1071,6 +1071,7 @@
     handOverButtons = buttons.slice();
     handLive = false;
     showOverlay('本手结束 · 全部手牌', html, buttons);
+    sizeResultCards();
   }
 
   /* ---------- 底池固定在顶栏状态胶囊内 ---------- */
@@ -1078,6 +1079,23 @@
     const pot = $('#pot'), slot = $('#potSlot');
     if (pot && slot && pot.parentNode !== slot) slot.appendChild(pot);
   })();
+
+  /* 结算面板：按视口直接写行内尺寸，避免被 .card.big 的变量链覆盖 */
+  function sizeResultCards() {
+    const vw = window.innerWidth || 1280;
+    const bw = Math.round(Math.min(78, Math.max(50, vw * 0.046)));
+    const rw = Math.round(Math.min(62, Math.max(40, vw * 0.036)));
+    const apply = (el, w) => {
+      el.style.width = w + 'px';
+      el.style.height = Math.round(w * 1.4) + 'px';
+      el.style.fontSize = Math.round(w * 0.48) + 'px';
+      el.style.borderRadius = Math.round(w * 0.17) + 'px';
+      const s = el.querySelector('.s');
+      if (s) s.style.fontSize = Math.round(w * 0.45) + 'px';
+    };
+    document.querySelectorAll('#ovBody .boardRow .card').forEach((el) => apply(el, bw));
+    document.querySelectorAll('#ovBody .res .rcards .card').forEach((el) => apply(el, rw));
+  }
 
   /* ---------- 成就墙（独立一页，不再占用顶部信息） ---------- */
   function openAchvWall(onBack) {
@@ -1185,6 +1203,31 @@
   $('#btnBlinds').addEventListener('click', openBlinds);
   $('#btnHistory').addEventListener('click', () => openHistory(null));
 
+  /* ---------- 字号开关：小 / 标准 / 大 / 特大 ---------- */
+  const FS_KEY = 'poker.font.v1';
+  const FS_LEVELS = [{ k: 's', n: '小' }, { k: 'm', n: '标准' }, { k: 'l', n: '大' }, { k: 'xl', n: '特大' }];
+
+  function currentFont() {
+    try {
+      const v = localStorage.getItem(FS_KEY);
+      return FS_LEVELS.some((x) => x.k === v) ? v : 'm';
+    } catch (e) { return 'm'; }
+  }
+
+  function applyFont(level) {
+    const k = FS_LEVELS.some((x) => x.k === level) ? level : 'm';
+    const el = document.documentElement;
+    el.classList.remove('fs-s', 'fs-m', 'fs-l', 'fs-xl');
+    el.classList.add('fs-' + k);
+    try { localStorage.setItem(FS_KEY, k); } catch (e) {}
+    return k;
+  }
+
+  function fontName(k) {
+    const l = FS_LEVELS.find((x) => x.k === k);
+    return l ? l.n : '标准';
+  }
+
   /* ---------- 顶栏菜单（方案三）：状态胶囊 + ☰ ---------- */
   (function initMenu() {
     const btn = $('#btnMenu');
@@ -1223,6 +1266,28 @@
     }
     function closeMenu() { panel.hidden = true; if (list) list.hidden = true; }
 
+    const fontList = $('#menuFontList');
+    const fontCur = $('#menuFontCur');
+
+    function buildFontList() {
+      if (!fontList) return;
+      const cur = currentFont();
+      fontList.innerHTML = FS_LEVELS.map((l) =>
+        '<button data-fs="' + l.k + '" class="' + (l.k === cur ? 'on' : '') + '">' +
+        (l.k === cur ? '✓ ' : '') + l.n + '</button>'
+      ).join('');
+      fontList.querySelectorAll('button').forEach((b) => {
+        b.addEventListener('click', () => {
+          const k = applyFont(b.getAttribute('data-fs'));
+          buildFontList();
+          if (fontCur) fontCur.textContent = fontName(k);
+          showToast('字号：' + fontName(k));
+        });
+      });
+      if (fontCur) fontCur.textContent = fontName(cur);
+    }
+    buildFontList();
+
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       panel.hidden ? openMenu() : closeMenu();
@@ -1239,6 +1304,12 @@
         const act = item.getAttribute('data-act');
         if (act === 'lang') {
           if (list) list.hidden = !list.hidden;
+          if (fontList) fontList.hidden = true;
+          return;
+        }
+        if (act === 'font') {
+          if (fontList) { buildFontList(); fontList.hidden = !fontList.hidden; }
+          if (list) list.hidden = true;
           return;
         }
         if (act === 'rebuy') {
@@ -1366,6 +1437,7 @@
   }
 
   // 多语言初始化
+  applyFont(currentFont());
   if (window.I18N) { I18N.init(); refreshLangBtn(); }
   // PWA：注册 Service Worker（离线可用；原生 App 内自动跳过）
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {

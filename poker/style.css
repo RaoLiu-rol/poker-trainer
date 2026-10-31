@@ -723,3 +723,47 @@ html.light .statusChip{background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.14);
 /* 结算面板里的小牌：随视口放大，与文字比例协调 */
 .res .rcards .card{--card-w:clamp(34px, 3.1vw, 58px); --card-base:clamp(34px, 3.1vw, 58px);}
 .res .rcards .card .s{font-size:calc(clamp(34px, 3.1vw, 58px) * 0.483);}
+
+/* ============================================================
+   字号开关：小 / 标准 / 大 / 特大（--fs 缩放所有弹层文字）
+   ============================================================ */
+:root{--fs:1;}
+html.fs-s{--fs:.85;}
+html.fs-m{--fs:1;}
+html.fs-l{--fs:1.15;}
+html.fs-xl{--fs:1.3;}
+
+.rbox h2{font-size:clamp(calc(22px*var(--fs)), calc(2.1vw*var(--fs)), calc(38px*var(--fs)));}
+.ovBody{font-size:clamp(calc(20px*var(--fs)), calc(2.3vw*var(--fs)), calc(38px*var(--fs)));}
+.res .rname{font-size:clamp(calc(19px*var(--fs)), calc(2.0vw*var(--fs)), calc(32px*var(--fs)));}
+.res .rh{font-size:clamp(calc(17px*var(--fs)), calc(1.7vw*var(--fs)), calc(27px*var(--fs)));}
+.res .rwin{font-size:clamp(calc(20px*var(--fs)), calc(2.2vw*var(--fs)), calc(36px*var(--fs)));}
+.sessionNet{font-size:clamp(calc(20px*var(--fs)), calc(2.0vw*var(--fs)), calc(34px*var(--fs)));}
+.sessionNet span{font-size:clamp(calc(24px*var(--fs)), calc(2.4vw*var(--fs)), calc(42px*var(--fs)));}
+.ovBtns button{font-size:clamp(calc(17px*var(--fs)), calc(1.55vw*var(--fs)), calc(26px*var(--fs)));}
+.achvLine{font-size:clamp(calc(17px*var(--fs)), calc(1.5vw*var(--fs)), calc(24px*var(--fs)));}
+
+/* 结算面板：底池/净额一行 + 公共牌与手牌的牌面字号，放大一倍 */
+.rbox .sub{font-size:clamp(calc(20px*var(--fs)), calc(2.2vw*var(--fs)), calc(36px*var(--fs))); color:var(--text);}
+.boardRow .card{--card-w:clamp(54px, 5.0vw, 84px); --card-base:clamp(54px, 5.0vw, 84px);}
+.boardRow .card{width:calc(var(--card-w)); height:calc(var(--card-w) * 1.4);
+  font-size:calc(var(--card-w) * 0.46);}
+.boardRow .card .s{font-size:calc(var(--card-w) * 0.44);}
+.res .rcards .card{--card-w:clamp(44px, 4.0vw, 66px); --card-base:clamp(44px, 4.0vw, 66px);
+  width:calc(var(--card-w)); height:calc(var(--card-w) * 1.4);
+  font-size:calc(var(--card-w) * 0.46);}
+.res .rcards .card .s{font-size:calc(var(--card-w) * 0.44);}
+
+/* 结算面板：牌面与摘要行（高优先级，确保压过旧规则） */
+#overlay .rbox .sub{
+  font-size:clamp(calc(20px*var(--fs)), calc(2.2vw*var(--fs)), calc(34px*var(--fs))) !important;
+  color:var(--text);
+}
+/* 桌面端：按钮条吸底，内容再长也能直接点「下一手」 */
+@media (min-width: 900px){
+  .ovBtns{
+    position:sticky; bottom:0; z-index:5; margin-top:12px; padding:12px 0 8px;
+    background:linear-gradient(180deg, rgba(4,16,10,0), rgba(4,16,10,.96) 45%);
+  }
+  html.light .ovBtns{background:linear-gradient(180deg, rgba(248,246,239,0), rgba(248,246,239,.97) 45%);}
+}
