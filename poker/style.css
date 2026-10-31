@@ -694,3 +694,8 @@ html.light .menuItem:hover,html.light .menuItem:active{background:rgba(0,0,0,.06
   color:inherit; font:inherit; font-weight:600; display:inline-flex; align-items:center; gap:6px;
 }
 .statusChip .chipBlindBtn b{color:#ffe08a; font-weight:800;}
+
+/* 浅色主题：底池与盲注数字改为深琥珀，保证对比度 */
+html.light .statusChip #pot{color:#6b4600;}
+html.light .statusChip .chipBlindBtn b{color:#6b4600;}
+html.light .statusChip{background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.14);}
