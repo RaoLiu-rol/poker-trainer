@@ -792,9 +792,9 @@ html.fs-xl{--fs:1.3;}
 
 /* 弹层右上角菜单入口 */
 .ovMenuBtn{
-  position:fixed; top:calc(10px + var(--safe-t)); right:12px; z-index:120;
-  width:48px; height:48px; border-radius:12px; font-size:22px; line-height:1;
-  background:rgba(255,255,255,.1); border:1px solid var(--border); color:var(--text);
+  position:fixed; top:calc(8px + var(--safe-t)); right:10px; z-index:120;
+  width:40px; height:40px; border-radius:10px; font-size:18px; line-height:1;
+  background:rgba(255,255,255,.08); border:1px solid var(--border); color:var(--text);
 }
 html.light .ovMenuBtn{background:rgba(0,0,0,.06);}
 .menuPanel{position:fixed; z-index:130;}
@@ -810,4 +810,8 @@ html.light .ovMenuBtn{background:rgba(0,0,0,.06);}
   }
   html.light #overlay .ovBtns{background:linear-gradient(180deg, rgba(248,246,239,0), rgba(248,246,239,.99) 35%);
     border-top:1px solid rgba(0,0,0,.1);}
+}
+
+@media (max-width: 600px){
+  #overlay{padding-top:56px;}
 }

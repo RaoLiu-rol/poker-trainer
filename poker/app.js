@@ -467,6 +467,10 @@
       bar.appendChild(btn);
     });
     $('#overlay').classList.add('show');
+    // 结算面板每次显示都重新量牌面尺寸（含从历史返回的情况）
+    if ($('#ovBody').querySelector('.boardRow')) {
+      try { sizeResultCards(); } catch (e) {}
+    }
   }
   const hideOverlay = () => $('#overlay').classList.remove('show');
 
@@ -1273,6 +1277,9 @@
       if (rl) rl.textContent = '买入 ＋' + game.currentBuyIn();
     }
     function closeMenu() { panel.hidden = true; if (list) list.hidden = true; }
+
+    // 面板挂到 body，避免被顶栏层叠上下文压在弹层下面
+    if (panel && panel.parentNode !== document.body) document.body.appendChild(panel);
 
     const fontList = $('#menuFontList');
     const fontCur = $('#menuFontCur');
