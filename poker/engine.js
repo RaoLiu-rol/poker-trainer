@@ -1,3 +1,4 @@
+/* Texas Hold'em Trainer — Copyright (c) 2026 raollll. All rights reserved. */
 /*
  * engine.js — 德州扑克核心引擎（无 DOM 依赖，可在 node 中直接测试）
  * 规则：无限注德州（NLHE），6 人桌，小盲 5 / 大盲 10，起始买入 1000。

@@ -1,3 +1,4 @@
+/* Texas Hold'em Trainer — Copyright (c) 2026 raollll. All rights reserved. */
 /* gamepad.js — Xbox / 标准手柄控制（Gamepad API） */
 (function () {
   'use strict';

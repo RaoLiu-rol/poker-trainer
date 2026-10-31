@@ -1,3 +1,4 @@
+/* Texas Hold'em Trainer — Copyright (c) 2026 raollll. All rights reserved. */
 /* app.js — 界面与交互（移动端） v2
    - 位置标签（庄家/小盲/大盲/UTG/MP/CO）全程常显
    - 每手记录自动生成复盘 Markdown，可写入 notes/hands/ 并本地留存历史

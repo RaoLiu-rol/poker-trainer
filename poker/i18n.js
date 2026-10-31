@@ -1,3 +1,4 @@
+/* Texas Hold'em Trainer — Copyright (c) 2026 raollll. All rights reserved. */
 /*
  * i18n.js — 运行时多语言层
  * 设计：以中文原文为 key，渲染后对 DOM 文本做最长匹配替换，避免改动上百处渲染代码。
