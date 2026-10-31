@@ -41,7 +41,7 @@
   function moveFocus(dir) {
     const list = focusables();
     if (!list.length) return;
-    if (st.focus < 0) st.focus = 0;
+    if (st.focus < 0) { setFocus(0); return; }   // 第一次按方向只是落焦点，不移动
     setFocus(st.focus + dir);
   }
 
@@ -132,7 +132,18 @@
     st.prev = buttons.map((b) => !!(b && b.pressed));
   }
 
+  let wasOverlay = false;
+
   function loop() {
+    // 弹层刚出现时，自动聚焦第一个按钮（否则第一次按方向会跳过它）
+    const shownNow = overlayShown();
+    if (shownNow && !wasOverlay) {
+      st.focus = -1;
+      setTimeout(() => { try { setFocus(0); } catch (e) {} }, 80);
+    }
+    if (!shownNow) st.focus = -1;
+    wasOverlay = shownNow;
+
     const pads = navigator.getGamepads ? navigator.getGamepads() : [];
     let pad = null;
     for (let i = 0; i < pads.length; i++) { if (pads[i] && pads[i].connected) { pad = pads[i]; break; } }
